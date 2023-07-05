@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 // 각각 보여줄 화면들 불러오기
 import Main from "./pages/Main";
 
-const STORAGE_KEY = "@timer" 
+const STORAGE_KEY = "@timers" 
 
 // 스택 네비게이션 만들기
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,6 +22,7 @@ function App() {
     AsyncStorage.getItem(STORAGE_KEY)
   }
   useEffect(() => {
+    AsyncStorage.setItem("Timers", []);
     loadTimer();
   }, []);
   

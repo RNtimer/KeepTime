@@ -1,5 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,13 +13,34 @@ import {
   Dimensions,
   KeyboardAvoidingView,
 } from "react-native";
-export default function Edit({ navigation }) {
+const STORAGE_KEY = "@timers"
+
+
+
+const addToDo = async () => {
+  if (text === "") {
+    return;
+  }
+  const newToDos = {
+    ...toDos,
+    [Date.now()]: { text, working },
+  };
+  setToDos(newToDos);
+  await saveToDos(newToDos);
+  setText("");
+};
+
+export default function Edit({ navigation, route }) {
+  const [timer, setTimer] = useState('')
+  const [timers, setTimers] = useState({})
+  
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [alarmName, setAlarmName] = useState("");
   const onChangeHour = (payload) => setHour(payload);
   const onChangeMinute = (payload) => setMinute(payload);
   const onChangeAlarmName = (payload) => setAlarmName(payload);
+  const onChangeWaitTime = (payload) => setWaitTime(payload);
 
   const [weekIndexinfo, setWeekIndexinfo] = useState([0, 1, 2, 3, 4, 5, 6]);
   const [weekNameinfo, setWeekNameinfo] = useState([
@@ -49,25 +71,35 @@ export default function Edit({ navigation }) {
     setIsEnabledSound((previousState) => !previousState);
   const [isEnabledRe, setIsEnabledRe] = useState(false);
   const toggleSwitch3 = () => setIsEnabledRe((previousState) => !previousState);
+  const [waitTime, setWaitTime] = useState("");
+
+  const saveTimer = async () => {
+              if (route.params.isAdd){
+                const value = await AsyncStorage.getItem("Timers").push([{alarmName}, {hour}, {minute}, {isAM}, {week}, {isEnabledVibe}, {isEnabledRe}, {isEnabledSound}, {"destination" : route.params.des}, {waitTime}])
+              AsyncStorage.setItem(value)
+              }
+            }
   return (
     <View style={styles.container}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={() => navigation.navigate("Main")}>
           <Text style={{ color: "orange" }}>취소</Text>
         </TouchableOpacity>
-        <Text style={styles.addAlarm}>알람 추가</Text>
-        <TouchableOpacity
+        <Text style={styles.addAlarm}>{route.params.isAdd ? "알람 추가" : "알람 수정"}</Text>
+        <TouchableOpacity 
           onPress={() => {
+            saveTimer();
+            isADD = route.params.isAdd
             navigation.navigate("Main", {
               alarmName,
               hour,
               minute,
               isAM,
-              weekinfo,
+              isADD
             });
           }}
         >
-          <Text style={{ color: "orange" }}>저장</Text>
+          <Text style={{ color: "orange" }}>{route.params.isAdd?"추가":"저장"}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.setTime}>
@@ -93,6 +125,7 @@ export default function Edit({ navigation }) {
             </Text>
           </TouchableOpacity>
           <TextInput
+          
             style={[styles.clock]}
             onChangeText={onChangeHour}
             keyboardType="numeric"
@@ -151,7 +184,8 @@ export default function Edit({ navigation }) {
         >
           <Text style={styles.optionText}>도착 장소</Text>
           <TouchableOpacity onPress={() => navigation.navigate("Map")}>
-            <Text>아이리스 피시방</Text>
+            {console.log("ad:",route.params.pnt)}
+            <Text>{route.params.des==undefined?'도착 장소 고르기':route.params.des}</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -204,8 +238,9 @@ export default function Edit({ navigation }) {
             style={[styles.minuteInput, , styles.optionText]}
             keyboardType="numeric"
             // onChangeText={(text)=> this.onChanged(text)}
-            placeholder="30"
+            value={waitTime}
             maxLength={2} //setting limit of input
+            onChangeText={onChangeWaitTime}
           />
           <Text style={styles.optionText}>분</Text>
         </View>
@@ -297,7 +332,7 @@ const styles = StyleSheet.create({
   },
 
   alarmName: {
-    fontSize: 13,
+    fontSize: 17,
   },
   arrive: {
     bottom: -7,
@@ -306,8 +341,8 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   ampm: {
-    bottom: -30,
-    fontSize: 13,
+    bottom: -34,
+    fontSize: 15,
     marginRight: 2,
   },
   time: {

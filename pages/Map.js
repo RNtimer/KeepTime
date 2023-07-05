@@ -82,9 +82,11 @@ export default function Map({ navigation }) {
         <TouchableOpacity
           onPress={() => {
             if (point[0] && point[1] && duration) {
+              console.log("pnst:",  point[1].description)
+              des = point[1].description
               navigation.navigate("Edit", {
-                place: point[1],
-                duration: duration,
+                des,
+                duration,
               });
             } else {
               if (point[0] && point[1])
