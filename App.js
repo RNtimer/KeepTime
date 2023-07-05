@@ -1,4 +1,4 @@
-// import Edit from "./pages/Edit";
+import Edit from "./pages/Edit";
 // import Main from "./pages/Main";
 import Map from "./pages/Map";
 
