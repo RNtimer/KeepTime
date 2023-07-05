@@ -48,7 +48,7 @@ export default function Main() {
           </View>
         </View>
         <View style={styles.timer}>
-          {/* 알람 이름, 위치 */}
+          {/* 알람 이름, 위치*/}
           <View style={styles.rowView1}>
             <Text style={styles.alarmName}>알람 이름</Text>
             <Text style={styles.arrive}>도착 장소</Text>
