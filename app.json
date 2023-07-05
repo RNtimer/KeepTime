@@ -18,6 +18,12 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.campustaxi.campustaxi", 
+      "config": { 
+        "googleMaps": { 
+          "apiKey": "AIzaSyBE-XSZz6MOmiLAfy9zWcSEZ10kGCyLCoI" 
+          } 
+        },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
