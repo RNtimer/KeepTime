@@ -1,5 +1,5 @@
 import Edit from "./pages/Edit";
-import Main from "./pages/Main";
+// import Main from "./pages/Main";
 import Map from "./pages/Map";
 
 import { StatusBar } from "expo-status-bar";
