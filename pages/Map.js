@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 
-export default function Map() {
+export default function Map({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [point, setPoint] = useState([]);
   const [detailArray, setDetailArray] = useState([]);
@@ -68,6 +68,34 @@ export default function Map() {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          justifyContent: "space-between",
+          flexDirection: "row",
+        }}
+      >
+        <TouchableOpacity onPress={({ map }) => navigation.pop(map)}>
+          <Text style={{ color: "orange", fontSize: 20, marginHorizontal: 5 }}>
+            {"<"}뒤로
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (point[0] && point[1] && duration) {
+              navigation.navigate("Edit", {
+                place: point[1],
+                duration: duration,
+              });
+            } else {
+              if (point[0] && point[1])
+                Alert.alert("경고", "데이터가 없습니다!");
+              else Alert.alert("경고", "장소를 입력해주세요!");
+            }
+          }}
+        >
+          <Text style={styles.Navbar}>저장</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.searchContainer}>
         <GooglePlacesAutocomplete
           minLength={2}
@@ -112,7 +140,12 @@ export default function Map() {
           styles={styles.input}
         />
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
         <TouchableOpacity
           style={[
             styles.modeButton,
@@ -207,6 +240,11 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  Navbar: {
+    color: "orange",
+    fontSize: 20,
+    marginHorizontal: 5,
   },
   searchContainer: {
     marginTop: 20,
