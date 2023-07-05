@@ -1,10 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+  Image,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome,
+} from "@expo/vector-icons";
+
+const MaxWidth = Dimensions.get("window").width;
 
 export default function Map({ navigation }) {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -98,49 +114,49 @@ export default function Map({ navigation }) {
           <Text style={styles.Navbar}>저장</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.searchContainer}>
-        <GooglePlacesAutocomplete
-          minLength={2}
-          placeholder="출발지 입력"
-          query={{
-            key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
-          }}
-          keyboardShouldPersistTaps={"handled"}
-          fetchDetails={true}
-          onPress={(data, details) => {
-            let copy = [...point];
-            copy[0] = data;
-            setPoint(copy);
-            let copy1 = [...detailArray];
-            copy1[0] = details;
-            setDetailArray(copy1);
-          }}
-          keepResultsAfterBlur={true}
-          enablePoweredByContainer={false}
-          styles={styles.input}
-        />
-      </View>
-      <View style={styles.searchContainer}>
-        <GooglePlacesAutocomplete
-          minLength={2}
-          placeholder="도착지 입력"
-          query={{
-            key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
-          }}
-          keyboardShouldPersistTaps={"handled"}
-          fetchDetails={true}
-          onPress={(data, details) => {
-            let copy = [...point];
-            copy[1] = data;
-            setPoint(copy);
-            let copy1 = [...detailArray];
-            copy1[1] = details;
-            setDetailArray(copy1);
-          }}
-          keepResultsAfterBlur={true}
-          enablePoweredByContainer={false}
-          styles={styles.input}
-        />
+      <View style={styles.search}>
+        <View style={styles.searchContainer}>
+          <GooglePlacesAutocomplete
+            minLength={2}
+            placeholder="출발지 입력"
+            query={{
+              key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
+            }}
+            keyboardShouldPersistTaps={"handled"}
+            fetchDetails={true}
+            onPress={(data, details) => {
+              let copy = [...point];
+              copy[0] = data;
+              setPoint(copy);
+              let copy1 = [...detailArray];
+              copy1[0] = details;
+              setDetailArray(copy1);
+            }}
+            keepResultsAfterBlur={true}
+            enablePoweredByContainer={false}
+          />
+        </View>
+        <View style={styles.searchContainer}>
+          <GooglePlacesAutocomplete
+            minLength={2}
+            placeholder="도착지 입력"
+            query={{
+              key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
+            }}
+            keyboardShouldPersistTaps={"handled"}
+            fetchDetails={true}
+            onPress={(data, details) => {
+              let copy = [...point];
+              copy[1] = data;
+              setPoint(copy);
+              let copy1 = [...detailArray];
+              copy1[1] = details;
+              setDetailArray(copy1);
+            }}
+            keepResultsAfterBlur={true}
+            enablePoweredByContainer={false}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -148,41 +164,33 @@ export default function Map({ navigation }) {
           justifyContent: "space-evenly",
         }}
       >
-        <TouchableOpacity
-          style={[
-            styles.modeButton,
-            mode === "DRIVING" && styles.selectedModeButton,
-          ]}
-          onPress={() => setMode("DRIVING")}
-        >
-          <Text style={styles.modeButtonText}>DRIVING</Text>
+        <TouchableOpacity onPress={() => setMode("DRIVING")}>
+          <AntDesign
+            name="car"
+            size={35}
+            color={(mode === "DRIVING" && "blue") || "black"}
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.modeButton,
-            mode === "WALKING" && styles.selectedModeButton,
-          ]}
-          onPress={() => setMode("WALKING")}
-        >
-          <Text style={styles.modeButtonText}>WALKING</Text>
+        <TouchableOpacity onPress={() => setMode("WALKING")}>
+          <MaterialCommunityIcons
+            name="walk"
+            size={35}
+            color={(mode === "WALKING" && "blue") || "black"}
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.modeButton,
-            mode === "BICYCLING" && styles.selectedModeButton,
-          ]}
-          onPress={() => setMode("BICYCLING")}
-        >
-          <Text style={styles.modeButtonText}>BICYCLING</Text>
+        <TouchableOpacity onPress={() => setMode("BICYCLING")}>
+          <FontAwesome
+            name="bicycle"
+            size={35}
+            color={(mode === "BICYCLING" && "blue") || "black"}
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.modeButton,
-            mode === "TRANSIT" && styles.selectedModeButton,
-          ]}
-          onPress={() => setMode("TRANSIT")}
-        >
-          <Text style={styles.modeButtonText}>TRANSIT</Text>
+        <TouchableOpacity onPress={() => setMode("TRANSIT")}>
+          <MaterialIcons
+            name="directions-transit"
+            size={35}
+            color={(mode === "TRANSIT" && "blue") || "black"}
+          />
         </TouchableOpacity>
       </View>
       {currentLocation && (
@@ -227,11 +235,16 @@ export default function Map({ navigation }) {
           )}
         </MapView>
       )}
-      {duration && (
-        <View style={styles.durationContainer}>
+      <View style={styles.durationContainer}>
+        {point[1] && (
+          <Text style={{ fontWeight: 500, fontSize: 25 }}>
+            {point[1].description}
+          </Text>
+        )}
+        {duration && (
           <Text style={styles.durationText}>예상 시간: {duration}</Text>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 }
@@ -239,6 +252,7 @@ export default function Map({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
   map: {
     flex: 1,
@@ -248,23 +262,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginHorizontal: 5,
   },
-  searchContainer: {
-    marginTop: 20,
-    padding: 8,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    backgroundColor: "#fff",
+  search: {
+    alignItems: "center",
   },
-  input: {
-    flex: 1,
-    height: 40,
-    borderColor: "gray",
+  searchContainer: {
+    margin: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    width: MaxWidth * 0.6,
     borderWidth: 1,
-    marginRight: 8,
-    paddingHorizontal: 8,
+    borderRadius: 5,
   },
   durationContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     padding: 8,
     justifyContent: "center",
     alignItems: "center",
