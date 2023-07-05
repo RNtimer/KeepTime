@@ -11,19 +11,21 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo"
+        }
+      },
       "supportsTablet": true
     },
     "android": {
-      "package": "com.campustaxi.campustaxi", 
-      "config": { 
-        "googleMaps": { 
-          "apiKey": "AIzaSyBE-XSZz6MOmiLAfy9zWcSEZ10kGCyLCoI" 
-          } 
-        },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
