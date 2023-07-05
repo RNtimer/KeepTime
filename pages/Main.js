@@ -20,8 +20,9 @@ export default function Main() {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>KEEPTIME</Text>
-      
+      <View style={styles.titleView}>
+        <Text style={styles.title}>KEEPTIME</Text>
+      </View>
       <ScrollView>
         {/* 위에 언제 다시 울리는지 */}
         <LinearGradient 
@@ -127,13 +128,17 @@ const styles = StyleSheet.create({
   clear:{
     height:40,
   },
+  titleView:{
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom:7
+  },
   title:{
     marginTop:30,
     marginLeft:15,
     fontSize:20,
     fontWeight:600,
-    justifyContent: "center",
-    alignItems: "center",
+    
   },
   container: {
     flex:1
