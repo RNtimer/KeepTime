@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-
 import {
   StyleSheet,
   Text,
@@ -13,11 +12,13 @@ import {
   Dimensions, 
   KeyboardAvoidingView ,
 } from "react-native";
-export default function Main() {
+export default function Edit({ navigation }) {
   const [hour, setHour] = useState(0)
   const [minute, setMinute] = useState(0)
+  const [alarmName, setAlarmName] = useState("")
   const onChangeHour = (payload) => setHour(payload);
   const onChangeMinute = (payload) => setMinute(payload);
+  const onChangeAlarmName = (payload) => setAlarmName(payload);
   
   const [weekIndexinfo, setWeekIndexinfo] = useState(
     [0, 1, 2, 3, 4, 5, 6]
@@ -39,9 +40,21 @@ export default function Main() {
   return (
     <View style={styles.container}>
       <View style={styles.topbar}>
-        <Text style={{color:"orange"}}>취소</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+          <Text style={{color:"orange"}}>취소</Text>
+        </TouchableOpacity>
         <Text style={styles.addAlarm}>알람 추가</Text>
-        <Text style={{color:"orange"}}>저장</Text>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate("Main", {
+            alarmName,    
+            hour,
+                minute,
+                isAM,
+                weekinfo,
+          })
+        }}>
+          <Text style={{color:"orange"}}>저장</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.setTime}>
         <Text style={styles.hopeTime}>희망 도착 시간</Text>
@@ -95,6 +108,8 @@ export default function Main() {
       </View>
       <View style={styles.options}>
       <TextInput
+          onChangeText={onChangeAlarmName}
+          value={alarmName}
           placeholder={
             "알람 이름"
           }
@@ -103,7 +118,9 @@ export default function Main() {
         <View style={styles.line}></View>
         <View style={[styles.setRow, styles.setSpaceBetween, styles.eachTextOption]}>
           <Text style={styles.optionText}>도착 장소</Text>
-          <Text>아이리스 피시방</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Map")}>
+            <Text>아이리스 피시방</Text>
+          </TouchableOpacity>
         </View>
         <View style={[styles.setRow, styles.setSpaceBetween, styles.eachOption]}>
           <Text style={styles.optionText}>진동</Text>
