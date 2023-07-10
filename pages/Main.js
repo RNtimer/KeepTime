@@ -21,8 +21,9 @@ export default function Main({ navigation, route }) {
     minute = 0;
     isAM = true;
     isADD = false;
-    var { alarmName, hour, minute, isAM, isADD } = route.params;
+    var { alarmName, hour, minute, isAM, isADD, dur, waitTime } = route.params;
     console.log(hour);
+    addinfo()
   } catch (err) {
     console.log(err);
   }
@@ -30,6 +31,24 @@ export default function Main({ navigation, route }) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const weekDay = ["일", "월", "화", "수", "목", "금", "토"];
+  const saveinfos = async (toSave) => {
+    await AsyncStorage.setItem(Timers, JSON.stringify(toSave));
+  };
+  const [infoAll, setinfoAll] = useState([])
+  const infos = {
+    "alarmName":alarmName,
+    "hour":hour,
+    "minute":minute,
+    "isAM":isAM,
+  }
+  const addinfo = async () => {
+    const newinfos = {
+      ...infoAll,
+      infos,
+    };
+    setinfoAll(newinfos);
+    await saveinfos(newinfos);
+  };
   
   let local;
   const localup = async () => {
@@ -47,7 +66,7 @@ export default function Main({ navigation, route }) {
       <ScrollView>
         <LinearGradient start={{ x: 0.1, y: 0.5 }} end={{ x: 0.9, y: 0.5 }} colors={['#FF357E', '#FF602E']} style={styles.lefttime}>
           <Text style={styles.leftText}>
-            다음 알림은{"\n"}4시간 36분후에 울림
+            다음 알림은{"\n"}4시간 30분후에 울림
           </Text>
         </LinearGradient>
             <TouchableOpacity
@@ -59,7 +78,7 @@ export default function Main({ navigation, route }) {
               {/* 알람 이름, 위치 */}
               <View style={styles.rowView1}>
                 <Text style={styles.alarmName}>{alarmName}</Text>
-                <Text style={styles.arrive}>워싱턴 DC</Text>
+                <Text style={styles.arrive}>도착지</Text>
               </View>
               {/* 오전, 시간, 요일, 온오프 */}
               <View style={styles.rowView2}>
@@ -67,6 +86,49 @@ export default function Main({ navigation, route }) {
                 <Text style={styles.time}>
                   {}
                   {hour} : {minute}
+                </Text>
+                
+
+                <Text style={styles.week}>
+                  {/* {week.foreach(function (element, index) {
+                    if (element) {
+                      <Text key={index}>{weekDay[0]}</Text>;
+                      weekDay.shift();
+                    } else {
+                      <Text key={index}>{weekDay[0]}</Text>;
+                      weekDay.shift();
+                    }
+                  // })} */}
+                  {/* {WEEK = [false,false,false,false,false,false,false]} */}
+                </Text>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#FF90AB" }}
+                  thumbColor={isEnabled ? "#ff3e6d" : "#ffffff"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                  style={styles.switch}
+                />
+                {dur && <Text style={{bottom:-70, left:-20, fontSize:13, color:'gray'}}>울리는 시간:{parseInt(((parseInt(hour)*60+parseInt(minute))-(parseInt(dur[0])*10+parseInt(dur[1]))-waitTime)/60)%24}:{ ((parseInt(hour)*60+parseInt(minute))-(parseInt(dur[0])*10+parseInt(dur[1]))-waitTime)%60}</Text>}
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Edit", {isAdd:false});
+            }}
+          >
+            <View style={styles.timer}>
+              {/* 알람 이름, 위치 */}
+              <View style={styles.rowView1}>
+                <Text style={styles.alarmName}>깨기싫다</Text>
+                <Text style={styles.arrive}>도착지</Text>
+              </View>
+              {/* 오전, 시간, 요일, 온오프 */}
+              <View style={styles.rowView2}>
+                <Text style={styles.ampm}>{!isAM ? "오전" : "오후"}</Text>
+                <Text style={styles.time}>
+                  {2} : {20}
                 </Text>
                 <Text style={styles.week}>
                   {/* {week.foreach(function (element, index) {
@@ -91,6 +153,48 @@ export default function Main({ navigation, route }) {
               </View>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Edit", {isAdd:false});
+            }}
+          >
+            <View style={styles.timer}>
+              {/* 알람 이름, 위치 */}
+              <View style={styles.rowView1}>
+                <Text style={styles.alarmName}>그래도 일어나야지</Text>
+                <Text style={styles.arrive}>도착지</Text>
+              </View>
+              {/* 오전, 시간, 요일, 온오프 */}
+              <View style={styles.rowView2}>
+                <Text style={styles.ampm}>{!isAM ? "오전" : "오후"}</Text>
+                <Text style={styles.time}>
+                  {12} : {30}
+                </Text>
+                
+                <Text style={styles.week}>
+                  {/* {week.foreach(function (element, index) {
+                    if (element) {
+                      <Text key={index}>{weekDay[0]}</Text>;
+                      weekDay.shift();
+                    } else {
+                      <Text key={index}>{weekDay[0]}</Text>;
+                      weekDay.shift();
+                    }
+                  // })} */}
+                  {/* {WEEK = [false,false,false,false,false,false,false]} */}
+                </Text>
+                
+                <Switch
+                  trackColor={{ false: "#767577", true: "#FF90AB" }}
+                  thumbColor={isEnabled ? "#ff3e6d" : "#ffffff"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                  style={styles.switch}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
           <View style={{ height: 30 }}></View>
         </ScrollView>
         <TouchableOpacity 
@@ -98,6 +202,7 @@ export default function Main({ navigation, route }) {
             navigation.navigate("Edit", {isAdd:true});
           }}>
           <Text style={{
+            color:'white',
             position:'absolute',
             bottom:10,
             fontSize:40,

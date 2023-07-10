@@ -88,14 +88,16 @@ export default function Edit({ navigation, route }) {
         <Text style={styles.addAlarm}>{route.params.isAdd ? "알람 추가" : "알람 수정"}</Text>
         <TouchableOpacity 
           onPress={() => {
-            saveTimer();
+            dur = route.params.duration
             isADD = route.params.isAdd
             navigation.navigate("Main", {
               alarmName,
               hour,
               minute,
               isAM,
-              isADD
+              isADD,
+              dur,
+              waitTime
             });
           }}
         >
