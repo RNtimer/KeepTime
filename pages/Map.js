@@ -65,7 +65,7 @@ export default function Map({ navigation }) {
     if (point[0] && point[1]) {
       origin = "place_id:" + point[0].place_id;
       pointEncoded = "place_id:" + point[1].place_id;
-      key = "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo";
+      key = process.env.REACT_APP_MAPS_KEY;
 
       url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${pointEncoded}&mode=${mode.toLowerCase()}&key=${key}`;
 
@@ -98,8 +98,8 @@ export default function Map({ navigation }) {
         <TouchableOpacity
           onPress={() => {
             if (point[0] && point[1] && duration) {
-              console.log("pnst:",  point[1].description)
-              des = point[1].description
+              console.log("pnst:", point[1].description);
+              des = point[1].description;
               navigation.navigate("Edit", {
                 des,
                 duration,
@@ -120,7 +120,7 @@ export default function Map({ navigation }) {
             minLength={2}
             placeholder="출발지 입력"
             query={{
-              key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
+              key: process.env.REACT_APP_MAPS_KEY,
             }}
             keyboardShouldPersistTaps={"handled"}
             fetchDetails={true}
@@ -141,7 +141,7 @@ export default function Map({ navigation }) {
             minLength={2}
             placeholder="도착지 입력"
             query={{
-              key: "AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo",
+              key: process.env.REACT_APP_MAPS_KEY,
             }}
             keyboardShouldPersistTaps={"handled"}
             fetchDetails={true}
@@ -227,7 +227,7 @@ export default function Map({ navigation }) {
             <MapViewDirections
               origin={"place_id:" + point[0].place_id}
               destination={"place_id:" + point[1].place_id}
-              apikey="AIzaSyBINIoP-2MwtGUoKMg76Ea4FdNA1H6sroo"
+              apikey={process.env.REACT_APP_MAPS_KEY}
               strokeWidth={4}
               strokeColor="hotpink"
               mode={mode.toUpperCase()}

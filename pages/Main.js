@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const STORAGE_KEY = "@timers" 
+
 import {
   StyleSheet,
   Text,
